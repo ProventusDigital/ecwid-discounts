@@ -1,5 +1,8 @@
 export default async function handler(req, res) {
   try {
+    console.log("METHOD:", req.method);
+    console.log("FULL BODY:", JSON.stringify(req.body, null, 2));
+
     if (req.method !== "POST") {
       return res.status(200).json({
         discounts: []
@@ -9,6 +12,8 @@ export default async function handler(req, res) {
     const body = req.body || {};
     const cart = body.cart || {};
     const items = Array.isArray(cart.items) ? cart.items : [];
+
+    console.log("ITEMS:", JSON.stringify(items, null, 2));
 
     let honeyQty = 0;
     let honeyProductId = null;
@@ -23,8 +28,13 @@ export default async function handler(req, res) {
     const bundleCount = Math.floor(honeyQty / 3);
     const discountValue = bundleCount * 2.5;
 
+    console.log("HONEY QTY:", honeyQty);
+    console.log("BUNDLE COUNT:", bundleCount);
+    console.log("DISCOUNT VALUE:", discountValue);
+    console.log("PRODUCT ID:", honeyProductId);
+
     if (bundleCount > 0 && honeyProductId) {
-      return res.status(200).json({
+      const response = {
         discounts: [
           {
             value: discountValue,
@@ -33,14 +43,18 @@ export default async function handler(req, res) {
             appliesToProducts: [honeyProductId]
           }
         ]
-      });
+      };
+
+      console.log("RESPONSE:", JSON.stringify(response, null, 2));
+      return res.status(200).json(response);
     }
 
+    console.log("RESPONSE: no discount");
     return res.status(200).json({
       discounts: []
     });
   } catch (error) {
-    console.log("Discount error:", error);
+    console.log("ERROR:", error);
     return res.status(200).json({
       discounts: []
     });
