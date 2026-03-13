@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     const cart = body.cart || {};
     const items = Array.isArray(cart.items) ? cart.items : [];
 
-    console.log("Incoming cart items:", JSON.stringify(items, null, 2));
+    console.log("FULL BODY:", JSON.stringify(body, null, 2));
+    console.log("ITEMS:", JSON.stringify(items, null, 2));
 
     let honeyQty = 0;
     let honeyProductId = null;
@@ -22,8 +23,8 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log("Matched SKU qty:", honeyQty);
-    console.log("Matched productId:", honeyProductId);
+    console.log("MATCHED QTY:", honeyQty);
+    console.log("MATCHED PRODUCT ID:", honeyProductId);
 
     if (honeyQty >= 3 && honeyProductId) {
       return res.status(200).json({
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({});
   } catch (error) {
-    console.log("Discount error:", error);
+    console.log("ERROR:", error);
     return res.status(200).json({});
   }
 }
