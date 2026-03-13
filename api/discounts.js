@@ -4,9 +4,7 @@ export default async function handler(req, res) {
     console.log("FULL REQUEST BODY:", JSON.stringify(req.body, null, 2));
 
     if (req.method !== "POST") {
-      return res.status(200).json({
-        discounts: []
-      });
+      return res.status(200).json({});
     }
 
     const body = req.body || {};
@@ -31,28 +29,22 @@ export default async function handler(req, res) {
     console.log("DISCOUNT VALUE:", discountValue);
     console.log("PRODUCT ID:", honeyProductId);
 
-    const response =
-      bundleCount > 0 && honeyProductId
-        ? {
-            discounts: [
-              {
-                value: discountValue,
-                type: "ABSOLUTE",
-                description: "3 Raw Honey jars for £23",
-                appliesToProducts: [honeyProductId]
-              }
-            ]
-          }
-        : {
-            discounts: []
-          };
+    if (bundleCount > 0 && honeyProductId) {
+      const response = {
+        value: discountValue,
+        type: "ABSOLUTE",
+        description: "3 Raw Honey jars for £23",
+        appliesToProducts: [honeyProductId]
+      };
 
-    console.log("RESPONSE:", JSON.stringify(response, null, 2));
-    return res.status(200).json(response);
+      console.log("RESPONSE:", JSON.stringify(response, null, 2));
+      return res.status(200).json(response);
+    }
+
+    console.log("RESPONSE: no discount");
+    return res.status(200).json({});
   } catch (error) {
     console.log("ERROR:", error);
-    return res.status(200).json({
-      discounts: []
-    });
+    return res.status(200).json({});
   }
 }
