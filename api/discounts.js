@@ -6,23 +6,31 @@ export default async function handler(req, res) {
       });
     }
 
-    const cart = req.body?.cart || {};
+    const body = req.body || {};
+    const cart = body.cart || {};
     const items = Array.isArray(cart.items) ? cart.items : [];
 
+    console.log("Incoming cart items:", JSON.stringify(items, null, 2));
+
     let honeyQty = 0;
+    let honeyProductId = null;
 
     for (const item of items) {
       if (item.sku === "HHH-RSB") {
         honeyQty += Number(item.amount || 0);
+        honeyProductId = item.productId;
       }
     }
 
-    if (honeyQty >= 3) {
+    console.log("Matched SKU qty:", honeyQty);
+    console.log("Matched productId:", honeyProductId);
+
+    if (honeyQty >= 3 && honeyProductId) {
       return res.status(200).json({
         value: 2.5,
         type: "ABSOLUTE",
         description: "3 Raw Honey jars for £23",
-        appliesToProducts: [801576266]
+        appliesToProducts: [honeyProductId]
       });
     }
 
