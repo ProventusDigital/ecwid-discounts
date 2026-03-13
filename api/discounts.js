@@ -5,7 +5,7 @@ export default async function handler(req, res) {
         message: "Ecwid discount endpoint working"
       });
     }
-
+console.log("FULL REQUEST BODY:", JSON.stringify(req.body, null, 2));
     const body = req.body || {};
     const cart = body.cart || {};
     const items = Array.isArray(cart.items) ? cart.items : [];
